@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+<LinearLayout 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello" 
+        android:textSize="18sp"/>
+
+        <LinearLayout
+            android:id="@android:id/widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="#808080"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip" />
+    
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nfc_test"
+                android:textSize="18sp" />
+            
+        <Button
+        android:id="@+id/initNFC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onInitNFC"
+        android:text="@string/InitNFC" />
+            
+        <Button
+        android:id="@+id/scanNFC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onScanNFC"
+        android:text="@string/ScanNFC" />
+
+            <TextView
+                android:id="@+id/nfc_pass"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pass_tip"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/nfc_fail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fail_tip"
+                android:textSize="35sp" />
+        
+        <LinearLayout
+            android:id="@android:id/widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="#808080"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip" />
+    
+    
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/camera_test"
+                android:textSize="18sp" />
+            
+        <Button
+        android:id="@+id/takePicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onTakePicture"
+        android:text="@string/TakePicture" />
+
+
+            <TextView
+                android:id="@+id/camera_pass"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pass_tip"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/camera_fail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fail_tip"
+                android:textSize="35sp" />
+        
+        <LinearLayout
+            android:id="@android:id/widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="#808080"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip" />
+    
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/audio_test"
+                android:textSize="18sp" />
+            
+        <Button
+        android:id="@+id/playSound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onPlaySound"
+        android:text="@string/AudioTest" />
+
+
+
+            <TextView
+                android:id="@+id/audio_pass"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pass_tip"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/audio_fail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fail_tip"
+                android:textSize="35sp" />
+        
+    <LinearLayout
+            android:id="@android:id/widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="#808080"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip" />
+    
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/tmc_test"
+                android:textSize="18sp" />
+            
+        <Button
+        android:id="@+id/openTMC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onOpenTMC"
+        android:text="@string/OpenTMC" />
+
+
+    <Button
+        android:id="@+id/sendTMCCMD"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onSendTMCCMD"
+        android:text="@string/SendTMCCMD" />
+    
+    <Button
+        android:id="@+id/closeTMC"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="onCloseTMC"
+        android:text="@string/CloseTMC" />
+    
+    <TextView
+        android:id="@+id/dataTMC"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/data_tmc" />
+    
+            <TextView
+                android:id="@+id/tmc_pass"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/pass_tip"
+                android:textSize="35sp" />
+
+            <TextView
+                android:id="@+id/tmc_fail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fail_tip"
+                android:textSize="35sp" />
+            
+    <LinearLayout
+            android:id="@android:id/widget_frame"
+            android:layout_width="match_parent"
+            android:layout_height="2dip"
+            android:background="#808080"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            android:paddingBottom="10dip"
+            android:paddingTop="10dip" />
+    
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_test"
+                android:textSize="18sp" />
+            
+            <TextView
+                android:id="@+id/sensor_fail"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/fail_tip"
+                android:textSize="35sp" />
+            
+    
+</LinearLayout>
+
+</ScrollView>

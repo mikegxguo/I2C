@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, I2C stress test tool!\n</string>
+    <string name="app_name">I2C</string>
+    
+    <string name="InitNFC">Initialize NFC card</string>
+    <string name="ScanNFC">Scan NFC card</string>
+    
+    <string name="TakePicture">Take A Picture</string>
+    
+    <string name="AudioTest">Audio Test</string>
+    
+    <string name="OpenTMC">Open TMC</string>
+    <string name="CloseTMC">Close TMC</string>
+    <string name="SendTMCCMD">Send TMC Command</string>
+    <string name="data_tmc">data is from TMC chip</string>
+    
+    
+    <string name="nfc_test">NFC test, \nthis area will show the results of NFC test</string>
+     <string name="camera_test">Camera test, \nthis area will show the results of Camera test</string>
+     <string name="audio_test">Audio test, \nthis area will show the results of Audio test</string>
+     <string name="tmc_test">TMC test, \nthis area will show the results of TMC test</string>
+    <string name="sensor_test">Sensor Test, \nthis area will show the results of sensor test</string>
+     
+    <string name="pass_tip">Pass: 0</string>
+    <string name="fail_tip">Fail: 0</string>
+     
+</resources>
