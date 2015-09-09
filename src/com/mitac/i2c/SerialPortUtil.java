@@ -161,7 +161,7 @@ public class SerialPortUtil {
                         }
                     } else if (size == 0) {
                         if (null != onDataReceiveListener) {
-                            onDataReceiveListener.onDataReceive(buffer, 0);
+                            onDataReceiveListener.onDataReceive(null, 0);
                         }
                     }
                 } catch (Exception e) {

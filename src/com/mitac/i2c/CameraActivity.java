@@ -80,7 +80,7 @@ public class CameraActivity extends Activity {
 
         svCamera = (SurfaceView) findViewById(R.id.sv_camera);
         if (svCamera.getVisibility() != View.VISIBLE) {
-            saveLog("Failed");
+            saveLog("Camera, fail to get SurfaceView\n");
             isCameraTestPassed = false;
             this.finish();
         }
@@ -95,12 +95,11 @@ public class CameraActivity extends Activity {
                 camera = AXCamera.getInstance(new File("/mnt/sdcard/DCIM"));
                 boolean isOpened = camera.open(facing);
                 if (!isOpened) {
-                    saveLog("Open camera failed");
+                    saveLog("Camera, fail to open camera\n");
                     isCameraTestPassed = false;
                     stopTest();
                     return;
                 }
-                saveLog("Camera opened");
 
                 SystemClock.sleep(4000);
                 if (!isTesting) {
@@ -114,17 +113,17 @@ public class CameraActivity extends Activity {
                     previewed = camera.preview(shCameraPreview, 0);
                 }
                 if (!previewed) {
+                    saveLog("Camera, fail to preview\n");
                     stopTest();
                     return;
                 }
-                saveLog("Camera previewed");
+
                 for (int i = 0; i < times; i++) {
                     SystemClock.sleep(3000);
                     if (!isTesting) {
                         return;
                     }
                     
-                    saveLog("Take a picture");
                     camera.shot();
                     SystemClock.sleep(2000);
           
@@ -142,7 +141,7 @@ public class CameraActivity extends Activity {
                         if (deleteFile)
                             file.delete();
                     } else {
-                        saveLog("Take picture failed");
+                        saveLog("Camera, fail to take a picture\n");
                         isCameraTestPassed = false;
                         stopTest();
                         return;
@@ -166,9 +165,7 @@ public class CameraActivity extends Activity {
     private void stopTest() {
         isTesting = false;
         if (camera.isOpened()) {
-            saveLog("Close camera");
             camera.close();
-            saveLog("Closed");
         }
         finish();
     }
@@ -176,7 +173,8 @@ public class CameraActivity extends Activity {
     private void saveLog(String log) {
         //log = TimeStamp.getTimeStamp(TimeStamp.TimeType.FULL_L_TYPE) + " |" + BISTApplication.ID_NAME.get(BISTApplication.CameraTest_BACK_ID) + "| " + log + "\r\n";
         //CameraTest.saveLog(log);
-        Log.d(TAG, log);
+        //Log.d(TAG, log);
+        I2CActivity.saveLog(log);
     }
 	
 	public class MyThread extends Thread {  

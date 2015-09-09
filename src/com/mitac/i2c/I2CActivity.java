@@ -2,6 +2,7 @@ package com.mitac.i2c;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 
@@ -33,6 +34,9 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Timer;
 import java.util.TimerTask;
 import android.os.SystemVibrator;
@@ -82,6 +86,7 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
     private int valHigh = 127;
     private int valMid = 64;
     private Timer timerVibrator;
+    private Vibrator mVibrator;
     
     //NFC
     private TextView nfcPass;
@@ -108,6 +113,8 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
     private static int cntCompassFail = 0;
     private static int cntAcceleratorFail = 0;
     
+    //Save FAIL information in the file
+    protected static File logFile;
 
     //Refresh
     private String mTmcBuf = null;
@@ -238,19 +245,24 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
                     if(x1==0 && y1==0 && z1==0) {
                         cntCompassFail += 1;
                         hRefresh.sendEmptyMessage(MSG_REFRESH);
+                        saveLog("E-Compass, FAIL to get the right value\n");
                     }                       
                 } else if (e.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                     x2 = e.values[SensorManager.DATA_X];
                     y2 = e.values[SensorManager.DATA_Y];
                     z2 = e.values[SensorManager.DATA_Z];
-                    if(x2==0 && y2==0 && z2==0) {
+                    //RAY: Put the device on the flat plane, calibrate it firstly,
+                    //then the value of X/Y axis is approximately zero,
+                    //the value of Z axis is about 9.8
+                    if((x2<-0.1 || x2>0.1) ||(y2<-0.1 || y2>0.1) || ( z2<9.7 || z2>9.9)) {
                         cntAcceleratorFail += 1;
                         hRefresh.sendEmptyMessage(MSG_REFRESH);
+                        saveLog("G-Sensor, FAIL to get the right value\n");
                     }                       
                 } else if (e.sensor.getType() == Sensor.TYPE_LIGHT) {
                     x3 = e.values[SensorManager.DATA_X];
                 }
-                /*               
+
                  Log.d(TAG, "Seneor Type: Compass\n" 
                      + "X:" + String.valueOf(x1) + "\n"
                      + "Y:" + String.valueOf(y1) + "\n"
@@ -260,7 +272,6 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
                         + "X:" + String.valueOf(x2) + "\n"
                          + "Y:" + String.valueOf(y2) + "\n"
                         + "Z:" + String.valueOf(z2) + "\n");
-                 */
 
                 //                 Log.d(TAG, "Seneor Type: Light Sensor\n"
                 //                        + "X:" + String.valueOf(x3) + "\n");
@@ -275,15 +286,15 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
 
         oriSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ORIENTATION);
         sensorMgr.registerListener(lsn, oriSensor,
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_GAME); //20ms
 
         GSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         sensorMgr.registerListener(lsn, GSensor,
-                SensorManager.SENSOR_DELAY_GAME);
+                SensorManager.SENSOR_DELAY_GAME); //20ms
 
         lightSensor = sensorMgr.getDefaultSensor(Sensor.TYPE_LIGHT);
         sensorMgr.registerListener(lsn, lightSensor,
-                SensorManager.SENSOR_DELAY_NORMAL);
+                SensorManager.SENSOR_DELAY_NORMAL); //200ms
 
 
         //Battery
@@ -296,6 +307,7 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
 
         //PMIC, Vibrator
         mHasVibrator = new SystemVibrator().hasVibrator();      
+        mVibrator = new Vibrator();
         timerVibrator = new Timer();
         timerVibrator.schedule(new TimerTask() {           
             @Override
@@ -304,16 +316,56 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
                     if (!bValHigh) {
                         bValHigh = true;
                         new SystemVibrator().change(valHigh);
-                        //Log.d(TAG, "PMIC, Vibrator, set high value");
+                        String intensity = mVibrator.getIntensity();
+                        if((intensity.compareTo("3.0V\n"))!=0) {
+                            //saveLog("Vibrator: "+intensity);
+                            saveLog("Vibrator, FAIL to set high intensity\n");
+                            //Log.d(TAG, "PMIC, Vibrator, FAIL to set high value: "+intensity);
+                       }
                     } else {
                         bValHigh = false;
                         new SystemVibrator().change(valMid);
-                        //Log.d(TAG, "PMIC, Vibrator, set middle value");
+                        String intensity = mVibrator.getIntensity();
+                        if((intensity.compareTo("2.7V\n"))!=0) {
+                            //saveLog("Vibrator: "+intensity);
+                            saveLog("Vibrator, FAIL to set middle intensity\n");
+                            //Log.d(TAG, "PMIC, Vibrator, FAIL to set middle value: "+intensity);
+                        }
                     }
                 }
             }
         }, 0, 10);
 
+        //Save FAIL information into the file
+        String temp = new SimpleDateFormat("HHmmss").format(System.currentTimeMillis());
+        logFile = new File(Environment.getExternalStorageDirectory(), "FAIL_"+temp+".txt");
+    }
+
+    public static void saveLog(String log) {
+        if (log == null || log.isEmpty()) {
+            return;
+        } else if (logFile == null) {
+            return;
+        } else if (!logFile.getParentFile().exists()) {
+            if (!logFile.getParentFile().mkdirs())
+                return;
+        }
+        FileWriter fileWriter = null;
+        try {
+            fileWriter = new FileWriter(logFile, true);
+            String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
+            fileWriter.append(timestamp+" "+log);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileWriter != null) {
+                    fileWriter.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void onInitNFC(View v) {
@@ -358,6 +410,7 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
                         cntAudioPass += 1;
                     } else {
                         cntAudioFail += 1;
+                        saveLog("Audio, FAIL to play sound\n");
                     }
                     //playSound(SOUND_IN_CALL_ALARM);
                     hRefresh.sendEmptyMessage(MSG_REFRESH);
@@ -576,6 +629,10 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
 
     public void onDataReceive(byte[] buffer, int size) {
         //TODO: 
+        if(size == 0) {
+            saveLog("TMC, TMC data is null\n");
+            return ;
+        }
         mTmcBuf = bytesToHexString(buffer);
         hRefresh.sendEmptyMessage(MSG_REFRESH);
     }
