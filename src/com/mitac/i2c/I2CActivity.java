@@ -631,9 +631,10 @@ public class I2CActivity extends Activity  implements OnDataReceiveListener{
         //TODO: 
         if(size == 0) {
             saveLog("TMC, TMC data is null\n");
-            return ;
+            mTmcBuf = null;
+        } else {
+             mTmcBuf = bytesToHexString(buffer);
         }
-        mTmcBuf = bytesToHexString(buffer);
         hRefresh.sendEmptyMessage(MSG_REFRESH);
     }
 }
